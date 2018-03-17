@@ -22,6 +22,7 @@ The plugin is configured to request a **double opt-in procedure** in order to be
 In this case, some additional data are recorded in the database:
 * the Acymailing subscriber ID
 * the list(s) the use has subscribed to
+* the custom message requesting consent
 
 ## Installation
 
