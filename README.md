@@ -14,7 +14,7 @@ Once the file is submitted, the consent is recorded in a table in the Joomla! ma
 * the text of the label that the user agreed to
 * the IP address of the user
 
-** Other use
+## Other use
 
 You can also use it to record proof of consent for **subscriber of an Acymailing newsletter**.
 If you want to enable user filling your contact form to subscribe to your mailing list, managed with Acymailing, the plugin adds a second checkbox for requesting specific consent for that purpose.
@@ -23,7 +23,7 @@ In this case, some additional data are recorded in the database:
 * the Acymailing subscriber ID
 * the list(s) the use has subscribed to
 
-** Installation
+## Installation
 
 * Download a .zip file of the plugin and install it as any Joomla! extension.
 * Once installed, go to the plugin manager, filter out on fabrik form plugins and enable the plugin
