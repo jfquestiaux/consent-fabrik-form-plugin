@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form>
+	<fields addfieldpath="/administrator/components/com_fabrik/models/fields" name="params">
+		<fieldset name="plg-form-gdpr-contact" label="PLG_FORM_GDPR_CONTACT">
+
+			<field default="0"
+				class="btn-group"
+				description="PLG_FORM_GDPR_CONTACT_USE_DESC" label="PLG_FORM_GDPR_CONTACT_USE_LABEL" name="gdpr_contact" repeat="true" type="radio">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>	
+			</field>
+				
+			<field default="" description="PLG_FORM_GDPR_DEFAULT_TEXT_DESC" label="PLG_FORM_GDPR_DEFAULT_TEXT_LABEL" name="gdpr_consent_text" repeat="true" size="80" type="text" />
+			
+		</fieldset>
+		
+		<fieldset name="plg-form-gdpr-acymailing" label="PLG_FORM_GDPR_ACYMAILING">
+
+			<field default="0"
+				class="btn-group"
+				description="PLG_FORM_GDPR_ACYMAILING_USE_DESC" label="PLG_FORM_GDPR_ACYMAILING_USE_LABEL" name="gdpr_acymailing" repeat="true" type="radio">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>	
+			</field>
+			
+			<field description="PLG_FORM_GDPR_ACYMAILING_LIST_ID_DESC" label="PLG_FORM_GDPR_ACYMAILING_LIST_ID_LABEL" name="acymailing_listid" repeat="true" size="30" type="text"/>
+		
+			<field description="PLG_FORM_GDPR_ACYMAILING_EMAIL_DESC" label="PLG_FORM_GDPR_ACYMAILING_EMAIL_LABEL" name="acymailing_email" onlytablefields="0" repeat="true" type="listfields" valueformat="tableelement"/>
+			
+			<field description="PLG_FORM_GDPR_ACYMAILING_NAME_DESC" label="PLG_FORM_GDPR_ACYMAILING_NAME_LABEL" name="acymailing_name" onlytablefields="0" repeat="true" type="listfields" valueformat="tableelement"/>
+				
+			<field default="" description="PLG_FORM_GDPR_ACYMAILING_SIGNUP_LABEL_DESC" label="PLG_FORM_GDPR_ACYMAILING_SIGNUP_LABEL_LABEL" name="acymailing_signuplabel" repeat="true" size="80" type="text" />
+			
+		</fieldset>
+		
+		<fieldset name="plg-form-gdpr-layout" label="PLG_FORM_GDPR_LAYOUT">
+			
+			<field default="1"
+				class="btn-group"
+				description="PLG_FORM_GDPR_FIELDSET_DESC" label="PLG_FORM_GDPR_FIELDSET_LABEL" name="gdpr_fieldset" repeat="true" type="radio">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>	
+			</field>
+			
+			<field default="" description="PLG_FORM_GDPR_FIELDSET_CLASS_DESC" label="PLG_FORM_GDPR_FIELDSET_CLASS_LABEL" name="gdpr_fieldset_class" repeat="true" size="40" type="text"/>
+			
+			<field default="" description="PLG_FORM_GDPR_LEGEND_DESC" label="PLG_FORM_GDPR_LEGEND_LABEL" name="gdpr_legend" repeat="true" size="40" type="text"/>
+			
+			<field default="" description="PLG_FORM_GDPR_LEGEND_CLASS_DESC" label="PLG_FORM_GDPR_LEGEND_CLASS_LABEL" name="gdpr_legend_class" repeat="true" size="40" type="text"/>
+			
+		</fieldset>
+	</fields>
+</form>
