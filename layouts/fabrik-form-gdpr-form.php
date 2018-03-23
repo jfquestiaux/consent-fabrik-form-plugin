@@ -12,7 +12,7 @@ $d = $displayData;
 if($d->useFieldset) :
 ?>
 <fieldset class="<?php echo $d->fieldsetClass; ?>">
-	<legend class="<?php $d->legendClass; ?>">
+	<legend class="<?php echo $d->legendClass; ?>">
 		<?php echo $d->legendText; ?>
 	</legend>
 <?php
