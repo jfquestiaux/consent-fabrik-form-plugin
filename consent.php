@@ -39,7 +39,7 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		$params    = $this->getParams();
 		$formModel = $this->getModel();
 
-		if ($params->get('consent_contact', true))
+		if ($params->get('consent_terms', true))
 		{
 			$layout = $this->getLayout('form');
 			$layoutData = new stdClass;
@@ -55,14 +55,15 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 				$layoutData->errClass = 'fabrikHide';
 			}
 
-			$layoutData->errText = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
-			$layoutData->useFieldset = $params->get('consent_fieldset', '0') === '1';
+			$layoutData->errText 	   = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
+			$layoutData->useFieldset   = $params->get('consent_fieldset', '0') === '1';
 			$layoutData->fieldsetClass = $params->get('consent_fieldset_class', '');
-			$layoutData->legendClass = $params->get('consent_legend_class', '');
-			$layoutData->legendText = FText::_($params->get('consent_legend', ''));
-			$layoutData->showConsent = $params->get('consent_contact', '0') === '1';
-			$layoutData->consentText = FText::_($params->get('consent_consent_text'));
-			$this->html = $layout->render($layoutData);
+			$layoutData->legendClass   = $params->get('consent_legend_class', '');
+			$layoutData->legendText    = FText::_($params->get('consent_legend', ''));
+			$layoutData->showConsent   = $params->get('consent_terms', '0') === '1';
+			$layoutData->consentIntro  = FText::_($params->get('consent_intro_terms'));
+			$layoutData->consentText   = FText::_($params->get('consent_consent_text'));
+			$this->html 			   = $layout->render($layoutData);
 		}
 		else
 		{
@@ -158,5 +159,4 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		$db->execute();
 		}
 	}
-	
 }
