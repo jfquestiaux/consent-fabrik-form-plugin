@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `#__fabrik_gdpr` (
+CREATE TABLE IF NOT EXISTS `#__fabrik_privacy` (
 	`id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 	`date_time` DATETIME DEFAULT NULL,
 	`reference` VARCHAR( 50 ) NOT NULL COMMENT 'tableid.formid.rowid reference',

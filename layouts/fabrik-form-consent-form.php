@@ -3,7 +3,7 @@ defined('JPATH_BASE') or die;
 $d = $displayData;
 
 ?>
-<div class="gdprError alert alert-error <?php echo $d->errClass ?>">
+<div class="consentError alert alert-error <?php echo $d->errClass ?>">
 	<button class="close" data-dismiss="alert">×</button>
 	<?php echo $d->errText; ?>
 </div>

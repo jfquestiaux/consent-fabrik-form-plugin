@@ -1,6 +1,6 @@
 <?php
 /**
- * RGPD compliance plugin for contact form and newsletter subscription
+ * Consent request plugin for Fabrik forms
  *
  * @package     Joomla.Plugin
  * @subpackage  Fabrik.form.acymailing
@@ -17,14 +17,14 @@ defined('_JEXEC') or die('Restricted access');
 require_once COM_FABRIK_FRONTEND . '/models/plugin-form.php';
 
 /**
- * RGPD compliance plugin for contact form and newsletter subscription
+ * Consent request plugin for Fabrik forms
  *
  * @package     Joomla.Plugin
  * @subpackage  Fabrik.form.gdpr
  * @since       3.8
  */
 
-class PlgFabrik_FormGdpr extends PlgFabrik_Form
+class PlgFabrik_FormConsent extends PlgFabrik_Form
 {
 	protected $html = null;
 
@@ -39,7 +39,7 @@ class PlgFabrik_FormGdpr extends PlgFabrik_Form
 		$params    = $this->getParams();
 		$formModel = $this->getModel();
 
-		if ($params->get('gdpr_contact', true) || $params->get('gdpr_acymailing', true))
+		if ($params->get('consent_contact', true) || $params->get('consent_acymailing', true))
 		{
 			$layout = $this->getLayout('form');
 			$layoutData = new stdClass;
@@ -55,14 +55,14 @@ class PlgFabrik_FormGdpr extends PlgFabrik_Form
 				$layoutData->errClass = 'fabrikHide';
 			}
 
-			$layoutData->errText = FText::_('PLG_FORM_GDPR_PLEASE_CONFIRM_CONSENT');
-			$layoutData->useFieldset = $params->get('gdpr_fieldset', '0') === '1';
-			$layoutData->fieldsetClass = $params->get('gdpr_fieldset_class', '');
-			$layoutData->legendClass = $params->get('gdpr_legend_class', '');
-			$layoutData->legendText = FText::_($params->get('gdpr_legend', ''));
-			$layoutData->showConsent = $params->get('gdpr_contact', '0') === '1';
-			$layoutData->consentText = FText::_($params->get('gdpr_consent_text'));
-			$layoutData->showMailing = $params->get('gdpr_acymailing', '0') === '1';
+			$layoutData->errText = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
+			$layoutData->useFieldset = $params->get('consent_fieldset', '0') === '1';
+			$layoutData->fieldsetClass = $params->get('consent_fieldset_class', '');
+			$layoutData->legendClass = $params->get('consent_legend_class', '');
+			$layoutData->legendText = FText::_($params->get('consent_legend', ''));
+			$layoutData->showConsent = $params->get('consent_contact', '0') === '1';
+			$layoutData->consentText = FText::_($params->get('consent_consent_text'));
+			$layoutData->showMailing = $params->get('consent_acymailing', '0') === '1';
 			$layoutData->mailingText = FText::_($params->get('acymailing_signuplabel', ''));
 			$this->html = $layout->render($layoutData);
 		}
@@ -77,7 +77,7 @@ class PlgFabrik_FormGdpr extends PlgFabrik_Form
 		$opts = json_encode($opts);
 
 		$this->formJavascriptClass($params, $formModel);
-		$formModel->formPluginJS['Gdpr' . $this->renderOrder] = 'var gdpr = new Gdpr(' . $opts . ');';
+		$formModel->formPluginJS['Consent' . $this->renderOrder] = 'var consent = new Consent(' . $opts . ');';
 
 	}
 
@@ -107,8 +107,8 @@ class PlgFabrik_FormGdpr extends PlgFabrik_Form
 		
 		if(!array_key_exists('fabrik_contact_consent', $formModel->formData))
 		{
-			$formModel->errors['consent_required'] = array(FText::_('PLG_FORM_GDPR_PLEASE_CONFIRM_CONSENT'));
-			$formModel->formErrorMsg = FText::_('PLG_FORM_GDPR_PLEASE_CONFIRM_CONSENT');
+			$formModel->errors['consent_required'] = array(FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT'));
+			$formModel->formErrorMsg = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
 			return false;
 		}
 	 }
@@ -147,7 +147,7 @@ class PlgFabrik_FormGdpr extends PlgFabrik_Form
 			if($contact)
 			{
 				$contactId 	    = $data['rowid'];
-				$contactMessage = $params->get('gdpr_consent_text');
+				$contactMessage = $params->get('consent_consent_text');
 			}
 			
 			if($acy)
@@ -159,7 +159,7 @@ class PlgFabrik_FormGdpr extends PlgFabrik_Form
 					$emailField	= $params->get('acymailing_email');			    
 					if(!$emailField)
 					{
-						throw new RuntimeException(FText::_('PLG_FORM_GDPR_NO_EMAIL_ERROR_MSG'));
+						throw new RuntimeException(FText::_('PLG_FORM_CONSENT_NO_EMAIL_ERROR_MSG'));
 						return false;
 					}
 					else
@@ -191,7 +191,7 @@ class PlgFabrik_FormGdpr extends PlgFabrik_Form
 		$query 	 = $db->getQuery( true );
 		$columns = array('id', 'date_time', 'reference', 'list_id', 'contact_id', 'acymailing_user_id', 'acymailing_list_ids', 'contact_message', 'acymailing_message', 'ip');
 		$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $db->quote($reference), $listId, $db->quote($contactId), $db->quote($acymailingUserId), $db->quote($acymailingListIds), $db->quote($contactMessage), $db->quote($acymailingMessage), $db->quote($_SERVER['REMOTE_ADDR']));
-		$query->insert($db->quoteName('#__fabrik_gdpr'))
+		$query->insert($db->quoteName('#__fabrik_privacy'))
 			  ->columns($db->quoteName($columns))
 			  ->values(implode(',', $values));
 		$db->setQuery($query);
@@ -210,7 +210,7 @@ class PlgFabrik_FormGdpr extends PlgFabrik_Form
 	{
 		if(!include_once(rtrim(JPATH_ADMINISTRATOR,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_acymailing'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'helper.php'))
 		{
-			throw new RuntimeException(FText::_('PLG_FORM_GDPR_ACYMAILING_ERROR_MSG'));
+			throw new RuntimeException(FText::_('PLG_FORM_CONSENT_ACYMAILING_ERROR_MSG'));
 			return false;
 		}
 		
@@ -227,7 +227,7 @@ class PlgFabrik_FormGdpr extends PlgFabrik_Form
 	{
 		if(!include_once(rtrim(JPATH_ADMINISTRATOR,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_acymailing'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'helper.php'))
 		{
-			throw new RuntimeException(FText::_('PLG_FORM_GDPR_ACYMAILING_ERROR_MSG'));
+			throw new RuntimeException(FText::_('PLG_FORM_CONSENT_ACYMAILING_ERROR_MSG'));
 			return false;
 		}
 		

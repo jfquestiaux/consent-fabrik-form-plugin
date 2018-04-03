@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS `#__fabrik_gdpr`;
+DROP TABLE IF EXISTS `#__fabrik_privacy`;

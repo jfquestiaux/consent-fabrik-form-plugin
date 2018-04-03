@@ -1,4 +1,4 @@
-# GDPR Fabrik form plugin
+# Consent Fabrik form plugin
 
 This plugin asks and records user's consent in order to be compliant with the GDPR directive.
 

@@ -6,7 +6,7 @@
  */
 define(['jquery', 'fab/fabrik'], function (jQuery, Fabrik) {
 	'use strict';
-	var Gdpr = new Class({
+	var Consent = new Class({
 
 		options: {
 			'renderOrder': ''
@@ -24,18 +24,18 @@ define(['jquery', 'fab/fabrik'], function (jQuery, Fabrik) {
 
 			Fabrik.addEvent('fabrik.form.submit.failed', function (form, event, btn) {
 				if (form === this.form) {
-                    jQuery('.gdprError').removeClass('fabrikHide');
+                    jQuery('.consentError').removeClass('fabrikHide');
                     this.form.showMainError(this.form.options.error);
                 }
 			}.bind(this));
 
             Fabrik.addEvent('fabrik.form.submitted', function (form, event, btn) {
             	if (form === this.form) {
-                    jQuery('.gdprError').addClass('fabrikHide');
+                    jQuery('.consentError').addClass('fabrikHide');
                 }
             }.bind(this));
 		}
 	});
 
-	return Gdpr;
+	return Consent;
 });

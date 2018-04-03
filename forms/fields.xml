@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <form>
 	<fields addfieldpath="/administrator/components/com_fabrik/models/fields" name="params">
-		<fieldset name="plg-form-gdpr-contact" label="PLG_FORM_GDPR_CONTACT">
+		<fieldset name="plg-form-consent-contact" label="PLG_FORM_CONSENT_CONTACT">
 
 			<field default="0"
 				class="btn-group"
-				description="PLG_FORM_GDPR_CONTACT_USE_DESC" label="PLG_FORM_GDPR_CONTACT_USE_LABEL" name="gdpr_contact" repeat="true" type="radio">
+				description="PLG_FORM_CONSENT_CONTACT_USE_DESC" label="PLG_FORM_CONSENT_CONTACT_USE_LABEL" name="consent_contact" repeat="true" type="radio">
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>	
 			</field>
 				
-			<field default="" description="PLG_FORM_GDPR_DEFAULT_TEXT_DESC" label="PLG_FORM_GDPR_DEFAULT_TEXT_LABEL" name="gdpr_consent_text" repeat="true" size="80" type="text" />
+			<field default="" description="PLG_FORM_CONSENT_DEFAULT_TEXT_DESC" label="PLG_FORM_CONSENT_DEFAULT_TEXT_LABEL" name="consent_consent_text" repeat="true" size="80" type="text" />
 			
 		</fieldset>
 		
-		<fieldset name="plg-form-gdpr-acymailing" label="PLG_FORM_GDPR_ACYMAILING">
+		<fieldset name="plg-form-consent-acymailing" label="PLG_FORM_CONSENT_ACYMAILING">
 
 			<field default="0"
 				class="btn-group"
-				description="PLG_FORM_GDPR_ACYMAILING_USE_DESC" label="PLG_FORM_GDPR_ACYMAILING_USE_LABEL" name="gdpr_acymailing" repeat="true" type="radio">
+				description="PLG_FORM_CONSENT_ACYMAILING_USE_DESC" label="PLG_FORM_CONSENT_ACYMAILING_USE_LABEL" name="consent_acymailing" repeat="true" type="radio">
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>	
 			</field>
 			
-			<field description="PLG_FORM_GDPR_ACYMAILING_LIST_ID_DESC" label="PLG_FORM_GDPR_ACYMAILING_LIST_ID_LABEL" name="acymailing_listid" repeat="true" size="30" type="text"/>
+			<field description="PLG_FORM_CONSENT_ACYMAILING_LIST_ID_DESC" label="PLG_FORM_CONSENT_ACYMAILING_LIST_ID_LABEL" name="acymailing_listid" repeat="true" size="30" type="text"/>
 		
-			<field description="PLG_FORM_GDPR_ACYMAILING_EMAIL_DESC" label="PLG_FORM_GDPR_ACYMAILING_EMAIL_LABEL" name="acymailing_email" onlytablefields="0" repeat="true" type="listfields" valueformat="tableelement"/>
+			<field description="PLG_FORM_CONSENT_ACYMAILING_EMAIL_DESC" label="PLG_FORM_CONSENT_ACYMAILING_EMAIL_LABEL" name="acymailing_email" onlytablefields="0" repeat="true" type="listfields" valueformat="tableelement"/>
 			
-			<field description="PLG_FORM_GDPR_ACYMAILING_NAME_DESC" label="PLG_FORM_GDPR_ACYMAILING_NAME_LABEL" name="acymailing_name" onlytablefields="0" repeat="true" type="listfields" valueformat="tableelement"/>
+			<field description="PLG_FORM_CONSENT_ACYMAILING_NAME_DESC" label="PLG_FORM_CONSENT_ACYMAILING_NAME_LABEL" name="acymailing_name" onlytablefields="0" repeat="true" type="listfields" valueformat="tableelement"/>
 				
-			<field default="" description="PLG_FORM_GDPR_ACYMAILING_SIGNUP_LABEL_DESC" label="PLG_FORM_GDPR_ACYMAILING_SIGNUP_LABEL_LABEL" name="acymailing_signuplabel" repeat="true" size="80" type="text" />
+			<field default="" description="PLG_FORM_CONSENT_ACYMAILING_SIGNUP_LABEL_DESC" label="PLG_FORM_CONSENT_ACYMAILING_SIGNUP_LABEL_LABEL" name="acymailing_signuplabel" repeat="true" size="80" type="text" />
 			
 		</fieldset>
 		
-		<fieldset name="plg-form-gdpr-layout" label="PLG_FORM_GDPR_LAYOUT">
+		<fieldset name="plg-form-consent-layout" label="PLG_FORM_CONSENT_LAYOUT">
 			
 			<field default="1"
 				class="btn-group"
-				description="PLG_FORM_GDPR_FIELDSET_DESC" label="PLG_FORM_GDPR_FIELDSET_LABEL" name="gdpr_fieldset" repeat="true" type="radio">
+				description="PLG_FORM_CONSENT_FIELDSET_DESC" label="PLG_FORM_CONSENT_FIELDSET_LABEL" name="consent_fieldset" repeat="true" type="radio">
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>	
 			</field>
 			
-			<field default="" description="PLG_FORM_GDPR_FIELDSET_CLASS_DESC" label="PLG_FORM_GDPR_FIELDSET_CLASS_LABEL" name="gdpr_fieldset_class" repeat="true" size="40" type="text"/>
+			<field default="" description="PLG_FORM_CONSENT_FIELDSET_CLASS_DESC" label="PLG_FORM_CONSENT_FIELDSET_CLASS_LABEL" name="consent_fieldset_class" repeat="true" size="40" type="text"/>
 			
-			<field default="" description="PLG_FORM_GDPR_LEGEND_DESC" label="PLG_FORM_GDPR_LEGEND_LABEL" name="gdpr_legend" repeat="true" size="40" type="text"/>
+			<field default="" description="PLG_FORM_CONSENT_LEGEND_DESC" label="PLG_FORM_CONSENT_LEGEND_LABEL" name="consent_legend" repeat="true" size="40" type="text"/>
 			
-			<field default="" description="PLG_FORM_GDPR_LEGEND_CLASS_DESC" label="PLG_FORM_GDPR_LEGEND_CLASS_LABEL" name="gdpr_legend_class" repeat="true" size="40" type="text"/>
+			<field default="" description="PLG_FORM_CONSENT_LEGEND_CLASS_DESC" label="PLG_FORM_CONSENT_LEGEND_CLASS_LABEL" name="consent_legend_class" repeat="true" size="40" type="text"/>
 			
 		</fieldset>
 	</fields>

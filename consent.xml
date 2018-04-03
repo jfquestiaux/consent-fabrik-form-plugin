@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <extension group="fabrik_form" method="upgrade" type="plugin" version="3">
-	<name>plg_fabrik_form_gdpr</name>
+	<name>plg_fabrik_form_consent</name>
 	<author>Better Web</author>
 	<creationDate>March 2018</creationDate>
 	<copyright>Copyright (C) 2005-2018 Better Web - All rights reserved.</copyright>
@@ -8,7 +8,7 @@
 	<authorEmail>info@betterweb.fr</authorEmail>
 	<authorUrl>https://www.betterweb.fr</authorUrl>
 	<version>3.8.1</version>
-	<help url="PLG_FORM_GDPR_HELP_SERVER"/>
+	<help url="PLG_FORM_CONSENT_HELP_SERVER"/>
 	<description>PLG_FORM_GDPR_DESCRIPTION</description>
 	
 	<install>
@@ -25,9 +25,10 @@
 	</uninstall>
 	
 	<files>
-		<filename plugin="gdpr">gdpr.php</filename>
+		<filename plugin="consent">consent.php</filename>
 		<folder>forms</folder>
 		<folder>language</folder>
+		<folder>layouts</folder>
 		<folder>sql</folder>
 		<filename>index.html</filename>
 	</files>
