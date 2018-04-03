@@ -4,7 +4,9 @@ CREATE TABLE IF NOT EXISTS `#__fabrik_privacy` (
 	`list_id` INT( 6 ) NOT NULL,
 	`form_id` INT( 6 ) NOT NULL,
 	`row_id` INT( 6 ) NOT NULL ,
+	`user_id` INT( 6 ) NOT NULL ,
 	`consent_message` TEXT NOT NULL,
+	`update_record` TINYINT( 1 ) NOT NULL ,
 	`ip` VARCHAR( 100 ) NOT NULL
 );
  

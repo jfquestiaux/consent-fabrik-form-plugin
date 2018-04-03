@@ -14,6 +14,20 @@
 				
 			<field default="" description="PLG_FORM_CONSENT_DEFAULT_TEXT_DESC" label="PLG_FORM_CONSENT_DEFAULT_TEXT_LABEL" name="consent_terms_text" repeat="true" size="40" type="text" />
 			
+			<field default="0"
+				class="btn-group"
+				description="PLG_FORM_CONSENT_JUSER_USE_DESC" label="PLG_FORM_CONSENT_JUSER_USE_LABEL" name="consent_juser" repeat="true" type="radio">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>	
+			</field>
+			
+			<field name="consent_field_userid"
+				type="listfields"
+				description="PLG_FORM_CONSENT_USER_ID_FIELD_DESC"
+				label="PLG_FORM_CONSENT_USER_ID_FIELD_LABEL"
+				onlytablefields="0"
+				repeat="true" />
+			
 		</fieldset>
 		
 		<fieldset name="plg-form-consent-layout" label="PLG_FORM_CONSENT_LAYOUT">

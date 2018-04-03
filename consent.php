@@ -104,10 +104,16 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 	{
 		$formModel = $this->getModel();
 		
-		if(!array_key_exists('fabrik_contact_consent', $formModel->formData))
+		if(!array_key_exists('fabrik_contact_consent', $formModel->formData) && $formModel->isNewRecord())
 		{
 			$formModel->errors['consent_required'] = array(FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT'));
 			$formModel->formErrorMsg = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
+			return false;
+		}
+		elseif(!array_key_exists('fabrik_contact_consent', $formModel->formData))
+		{
+			$formModel->errors['consent_required'] = array(FText::_('PLG_FORM_CONSENT_REMOVE_CONSENT'));
+			$formModel->formErrorMsg = FText::_('YYY');
 			return false;
 		}
 	 }
@@ -126,17 +132,24 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		$data 	   = $this->getProcessData();
 		$filter    = JFilterInput::getInstance();
 		$post      = $filter->clean($_POST, 'array');
-		$contact   = array_key_exists('fabrik_contact_consent', $post);		
+		$contact   = array_key_exists('fabrik_contact_consent', $post);
 		
-		// Record consent
+		if($params->get('consent_juser', '0') === '1')
+		{
+			$userIdField = $this->getFieldName('consent_field_userid');
+			$userId = $data[$userIdField];
+		}
+
 		// If consent is missing for contact, do nothing
 		if ($formModel->isNewRecord() && !$contact)
 		{
 			return;
 		}
 		
-		// When editing a record, don't process consent again
-		if($formModel->isNewRecord())
+		// Record consent
+		// To be valid a consent must record the date/time of the consent, the identity of the user and the consent message he agreed to.
+		// If you edit a user's data, you must keep a record of the change
+		if($formModel->isNewRecord() || $params->get('consent_juser', '0') === '1')
 		{
 			$now 	   = new JDate('now');
 			$listId	   = $data['listid'];
@@ -144,11 +157,21 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 			$rowId	   = $data['rowid'];
 			
 			$consentMessage = $params->get('consent_terms_text');
+			   
+			// Flag the record when user's data are updated
+			if($formModel->isNewRecord())
+			{
+				$update = '0';
+			}
+			else
+			{
+				$update = '1';
+			}
 		
 			$db    	 = JFactory::getDBO();
 			$query 	 = $db->getQuery( true );
-			$columns = array('id', 'date_time', 'list_id', 'form_id', 'row_id', 'consent_message', 'ip');
-			$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $listId, $formId, $rowId, $db->quote($consentMessage), $db->quote($_SERVER['REMOTE_ADDR']));
+			$columns = array('id', 'date_time', 'list_id', 'form_id', 'row_id', 'user_id', 'consent_message', 'update_record','ip');
+			$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $listId, $formId, $rowId, $userId, $db->quote($consentMessage), $update, $db->quote($_SERVER['REMOTE_ADDR']));
 			$query->insert($db->quoteName('#__fabrik_privacy'))
 				  ->columns($db->quoteName($columns))
 				  ->values(implode(',', $values));
