@@ -29,17 +29,6 @@ if ($d->showConsent) :
 <?php
 endif;
 
-if($d->showMailing) :
-?>
-	<div class="acymailing_consent">
-		<input id="fabrik_acymailing_signup" type="checkbox" name="fabrik_acymailing_signup" value="1" style="margin-right: 10px;">
-		<label for="fabrik_acymailing_signup">
-			<?php echo $d->mailingText; ?>
-		</label>
-	</div>
-<?php
-endif;
-
 if($d->useFieldset) :
 ?>
 </fieldset>

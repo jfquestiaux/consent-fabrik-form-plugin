@@ -39,7 +39,7 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		$params    = $this->getParams();
 		$formModel = $this->getModel();
 
-		if ($params->get('consent_contact', true) || $params->get('consent_acymailing', true))
+		if ($params->get('consent_contact', true))
 		{
 			$layout = $this->getLayout('form');
 			$layoutData = new stdClass;
@@ -62,8 +62,6 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 			$layoutData->legendText = FText::_($params->get('consent_legend', ''));
 			$layoutData->showConsent = $params->get('consent_contact', '0') === '1';
 			$layoutData->consentText = FText::_($params->get('consent_consent_text'));
-			$layoutData->showMailing = $params->get('consent_acymailing', '0') === '1';
-			$layoutData->mailingText = FText::_($params->get('acymailing_signuplabel', ''));
 			$this->html = $layout->render($layoutData);
 		}
 		else
@@ -127,12 +125,11 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		$data 	   = $this->getProcessData();
 		$filter    = JFilterInput::getInstance();
 		$post      = $filter->clean($_POST, 'array');
-		$contact   = array_key_exists('fabrik_contact_consent', $post);
-		$acy	   = array_key_exists('fabrik_acymailing_signup', $post);		
+		$contact   = array_key_exists('fabrik_contact_consent', $post);		
 		
 		// Record consent
 		// If consent is missing for contact and newsletter, do nothing
-		if ($formModel->isNewRecord() && !$contact && !$acy)
+		if ($formModel->isNewRecord() && !$contact)
 		{
 			return;
 		}
@@ -149,48 +146,11 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 				$contactId 	    = $data['rowid'];
 				$contactMessage = $params->get('consent_consent_text');
 			}
-			
-			if($acy)
-			{
-				if($this->checkAcymailing())
-				{
-					$myUser = new stdClass();
-			
-					$emailField	= $params->get('acymailing_email');			    
-					if(!$emailField)
-					{
-						throw new RuntimeException(FText::_('PLG_FORM_CONSENT_NO_EMAIL_ERROR_MSG'));
-						return false;
-					}
-					else
-					{
-						$emailKey 	   = $formModel->getElement($emailField, true)->getFullName();
-						$myUser->email = $formModel->formDataWithTableName[$emailKey];
-					}
-					
-					$nameField = $params->get('acymailing_name');
-					if($nameField)
-					{
-						$nameKey 	  = $formModel->getElement($nameField, true)->getFullName();
-						$myUser->name = $formModel->formDataWithTableName[$nameKey];
-					}
-					else
-					{
-						$myUser->name ='';
-					}
-					
-					$subscribe = explode(',', $params->get('acymailing_listid'));
-					
-					$acymailingUserId  = $this->acymailingSubscribe($myUser, $subscribe, $formModel);
-					$acymailingListIds = $params->get('acymailing_listid');
-					$acymailingMessage = $params->get('acymailing_signuplabel');				
-				}
-			}
 		
 		$db    	 = JFactory::getDBO();
 		$query 	 = $db->getQuery( true );
-		$columns = array('id', 'date_time', 'reference', 'list_id', 'contact_id', 'acymailing_user_id', 'acymailing_list_ids', 'contact_message', 'acymailing_message', 'ip');
-		$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $db->quote($reference), $listId, $db->quote($contactId), $db->quote($acymailingUserId), $db->quote($acymailingListIds), $db->quote($contactMessage), $db->quote($acymailingMessage), $db->quote($_SERVER['REMOTE_ADDR']));
+		$columns = array('id', 'date_time', 'reference', 'list_id', 'contact_id', 'contact_message', 'ip');
+		$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $db->quote($reference), $listId, $db->quote($contactId), $db->quote($contactMessage), $db->quote($_SERVER['REMOTE_ADDR']));
 		$query->insert($db->quoteName('#__fabrik_privacy'))
 			  ->columns($db->quoteName($columns))
 			  ->values(implode(',', $values));
@@ -199,65 +159,4 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		}
 	}
 	
-	/**
-	 * Check whether Acymailing component is installed
-	 * returns false and error message if not installed
-	 *
-	 * @return	bool
-	 */
-	
-	protected function checkAcymailing()
-	{
-		if(!include_once(rtrim(JPATH_ADMINISTRATOR,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_acymailing'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'helper.php'))
-		{
-			throw new RuntimeException(FText::_('PLG_FORM_CONSENT_ACYMAILING_ERROR_MSG'));
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * Add user as an Acymailing subscriber
-	 *
-	 * @return	bool
-	 */
-	
-	protected function acymailingSubscribe($user, $lists, $formModel)
-	{
-		if(!include_once(rtrim(JPATH_ADMINISTRATOR,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_acymailing'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'helper.php'))
-		{
-			throw new RuntimeException(FText::_('PLG_FORM_CONSENT_ACYMAILING_ERROR_MSG'));
-			return false;
-		}
-		
-		$user->confirmed = 0;
- 
-		$subscriberClass = acymailing_get('class.subscriber');
- 
-		$subid = $subscriberClass->save($user);
- 
-		$newSubscription = array();
-		if(!empty($lists))
-		{
-			foreach($lists as $listId)
-			{
-				$newList = array();
-				
-				if ($formModel->isNewRecord())
-				{
-					$newList['status'] 		  = 1;
-					$newSubscription[$listId] = $newList;
-				}
-			}
-		}
-		
-		if(empty($newSubscription)) return $subid;
-		
-		if(empty($subid)) return false;
-		
-		$subscriberClass->saveSubscription($subid,$newSubscription);
-		
-		return $subid;
-	}
 }
