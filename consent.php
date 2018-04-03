@@ -62,7 +62,7 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 			$layoutData->legendText    = FText::_($params->get('consent_legend', ''));
 			$layoutData->showConsent   = $params->get('consent_terms', '0') === '1';
 			$layoutData->consentIntro  = FText::_($params->get('consent_intro_terms'));
-			$layoutData->consentText   = FText::_($params->get('consent_consent_text'));
+			$layoutData->consentText   = FText::_($params->get('consent_terms_text'));
 			$this->html 			   = $layout->render($layoutData);
 		}
 		else
@@ -129,7 +129,7 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		$contact   = array_key_exists('fabrik_contact_consent', $post);		
 		
 		// Record consent
-		// If consent is missing for contact and newsletter, do nothing
+		// If consent is missing for contact, do nothing
 		if ($formModel->isNewRecord() && !$contact)
 		{
 			return;
@@ -139,24 +139,21 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		if($formModel->isNewRecord())
 		{
 			$now 	   = new JDate('now');
-			$reference = $data['listid'] . '.' . $data['formid'] . '.' . $data['rowid'];
 			$listId	   = $data['listid'];
+			$formId	   = $data['formid'];
+			$rowId	   = $data['rowid'];
 			
-			if($contact)
-			{
-				$contactId 	    = $data['rowid'];
-				$contactMessage = $params->get('consent_consent_text');
-			}
+			$consentMessage = $params->get('consent_terms_text');
 		
-		$db    	 = JFactory::getDBO();
-		$query 	 = $db->getQuery( true );
-		$columns = array('id', 'date_time', 'reference', 'list_id', 'contact_id', 'contact_message', 'ip');
-		$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $db->quote($reference), $listId, $db->quote($contactId), $db->quote($contactMessage), $db->quote($_SERVER['REMOTE_ADDR']));
-		$query->insert($db->quoteName('#__fabrik_privacy'))
-			  ->columns($db->quoteName($columns))
-			  ->values(implode(',', $values));
-		$db->setQuery($query);
-		$db->execute();
+			$db    	 = JFactory::getDBO();
+			$query 	 = $db->getQuery( true );
+			$columns = array('id', 'date_time', 'list_id', 'form_id', 'row_id', 'consent_message', 'ip');
+			$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $listId, $formId, $rowId, $db->quote($consentMessage), $db->quote($_SERVER['REMOTE_ADDR']));
+			$query->insert($db->quoteName('#__fabrik_privacy'))
+				  ->columns($db->quoteName($columns))
+				  ->values(implode(',', $values));
+			$db->setQuery($query); 
+			$db->execute();
 		}
 	}
 }

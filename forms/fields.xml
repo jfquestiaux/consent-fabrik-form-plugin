@@ -12,7 +12,7 @@
 			
 			<field default="" description="PLG_FORM_CONSENT_INTRO_TERMS_TEXT_DESC" label="PLG_FORM_CONSENT_INTRO_TERMS_TEXT_LABEL" name="consent_intro_terms" repeat="true" type="textarea" cols="60" rows="2" />
 				
-			<field default="PLG_FORM_CONSENT_DEFAULT_CONSENT_TEXT" description="PLG_FORM_CONSENT_DEFAULT_TEXT_DESC" label="PLG_FORM_CONSENT_DEFAULT_TEXT_LABEL" name="consent_consent_text" repeat="true" size="40" type="text" />
+			<field default="" description="PLG_FORM_CONSENT_DEFAULT_TEXT_DESC" label="PLG_FORM_CONSENT_DEFAULT_TEXT_LABEL" name="consent_terms_text" repeat="true" size="40" type="text" />
 			
 		</fieldset>
 		
