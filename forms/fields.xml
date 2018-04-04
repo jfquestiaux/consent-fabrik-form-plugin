@@ -46,5 +46,16 @@
 			<field default="" description="PLG_FORM_CONSENT_LEGEND_CLASS_DESC" label="PLG_FORM_CONSENT_LEGEND_CLASS_LABEL" name="consent_legend_class" repeat="true" size="40" type="text"/>
 			
 		</fieldset>
+		
+		<fieldset name="plg-form-consent-options" label="PLG_FORM_CONSENT_OPTIONS">
+			
+			<field default="0"
+				class="btn-group"
+				description="PLG_FORM_CONSENT_IP_RECORD_DESC" label="PLG_FORM_CONSENT_IP_RECORD_LABEL" name="consent_ip_record" repeat="true" type="radio">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>	
+			</field>
+			
+		</fieldset>
 	</fields>
 </form>

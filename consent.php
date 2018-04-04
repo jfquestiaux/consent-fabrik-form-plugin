@@ -157,7 +157,14 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 			$rowId	   = $data['rowid'];
 			
 			$consentMessage = $params->get('consent_terms_text');
+			
+			// Optional record of the IP address
+			$ip = '';
+			if($params->get('consent_ip_record', '0') === '1')
+			{
+				$ip = $_SERVER['REMOTE_ADDR'];
 			   
+			}
 			// Flag the record when user's data are updated
 			if($formModel->isNewRecord())
 			{
@@ -171,7 +178,7 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 			$db    	 = JFactory::getDBO();
 			$query 	 = $db->getQuery( true );
 			$columns = array('id', 'date_time', 'list_id', 'form_id', 'row_id', 'user_id', 'consent_message', 'update_record','ip');
-			$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $listId, $formId, $rowId, $userId, $db->quote($consentMessage), $update, $db->quote($_SERVER['REMOTE_ADDR']));
+			$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $listId, $formId, $rowId, $userId, $db->quote($consentMessage), $update, $db->quote($ip));
 			$query->insert($db->quoteName('#__fabrik_privacy'))
 				  ->columns($db->quoteName($columns))
 				  ->values(implode(',', $values));
