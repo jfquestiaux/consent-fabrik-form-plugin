@@ -49,13 +49,19 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 			if (array_key_exists('consent_required', $errors))
 			{
 				$layoutData->errClass = '';
+				$layoutData->errText  = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
+			}
+			elseif(array_key_exists('consent_remove', $errors))
+			{
+				$layoutData->errClass = '';
+				$layoutData->errText  = FText::_('PLG_FORM_CONSENT_REMOVE_CONSENT');
 			}
 			else
 			{
 				$layoutData->errClass = 'fabrikHide';
 			}
 
-			$layoutData->errText 	   = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
+			
 			$layoutData->useFieldset   = $params->get('consent_fieldset', '0') === '1';
 			$layoutData->fieldsetClass = $params->get('consent_fieldset_class', '');
 			$layoutData->legendClass   = $params->get('consent_legend_class', '');
@@ -112,8 +118,8 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		}
 		elseif(!array_key_exists('fabrik_contact_consent', $formModel->formData))
 		{
-			$formModel->errors['consent_required'] = array(FText::_('PLG_FORM_CONSENT_REMOVE_CONSENT'));
-			$formModel->formErrorMsg = FText::_('YYY');
+			$formModel->errors['consent_remove'] = array(FText::_('PLG_FORM_CONSENT_REMOVE_CONSENT'));
+			$formModel->formErrorMsg = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
 			return false;
 		}
 	 }
@@ -133,15 +139,21 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		$filter    = JFilterInput::getInstance();
 		$post      = $filter->clean($_POST, 'array');
 		$contact   = array_key_exists('fabrik_contact_consent', $post);
+		$rowid	   = $post['rowid'];
+		
 		
 		if($params->get('consent_juser', '0') === '1')
 		{
-			$userIdField = $this->getFieldName('consent_field_userid');
+			$userIdField = $this->getFieldName('consent_field_userid');      echo '<pre>';
+				print_r( $userIdField );
+				echo '</pre>';
+				exit;
+			
 			$userId = $data[$userIdField];
 		}
 
 		// If consent is missing for contact, do nothing
-		if ($formModel->isNewRecord() && !$contact)
+		if ($rowid && !$contact)
 		{
 			return;
 		}
@@ -149,24 +161,10 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		// Record consent
 		// To be valid a consent must record the date/time of the consent, the identity of the user and the consent message he agreed to.
 		// If you edit a user's data, you must keep a record of the change
-		if($formModel->isNewRecord() || $params->get('consent_juser', '0') === '1')
+		if($rowid || $params->get('consent_juser', '0') === '1')
 		{
-			$now 	   = new JDate('now');
-			$listId	   = $data['listid'];
-			$formId	   = $data['formid'];
-			$rowId	   = $data['rowid'];
-			
-			$consentMessage = $params->get('consent_terms_text');
-			
-			// Optional record of the IP address
-			$ip = '';
-			if($params->get('consent_ip_record', '0') === '1')
-			{
-				$ip = $_SERVER['REMOTE_ADDR'];
-			   
-			}
 			// Flag the record when user's data are updated
-			if($formModel->isNewRecord())
+			if(!$rowid)
 			{
 				$update = '0';
 			}
@@ -175,15 +173,97 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 				$update = '1';
 			}
 		
-			$db    	 = JFactory::getDBO();
-			$query 	 = $db->getQuery( true );
-			$columns = array('id', 'date_time', 'list_id', 'form_id', 'row_id', 'user_id', 'consent_message', 'update_record','ip');
-			$values  = array('NULL', $db->quote($now->format('Y-m-d H:i:s')), $listId, $formId, $rowId, $userId, $db->quote($consentMessage), $update, $db->quote($ip));
-			$query->insert($db->quoteName('#__fabrik_privacy'))
-				  ->columns($db->quoteName($columns))
-				  ->values(implode(',', $values));
-			$db->setQuery($query); 
-			$db->execute();
+			$this->savePrivacy($data, $userId, $update);
 		}
+		
+		return;
+	}
+	
+	/**
+	 * Run from list model when deleting rows
+	 *
+	 * @param   array &$groups List data for deletion
+	 *
+	 * @return    bool
+	 */
+	public function onDeleteRowsForm(&$groups)
+	{	
+		$params    = $this->getParams();
+		$formModel = $this->getModel();
+		$listModel = $formModel->getListModel();
+		
+		//// Records log of deletion of a user's consent
+		foreach ($groups as $group)
+		{
+			foreach ($group as $rows)
+			{
+				foreach ($rows as $row)
+				{
+					$userId = 0;
+					if($params->get('consent_juser', '0') === '1')
+					{
+						$userIdField = $this->getFieldName('consent_field_userid');				
+						$userId 	 = $row->$userIdField;
+					}
+					$data['listid'] = $listModel->getId();
+					$data['formid'] = $formModel->getid();
+					$data['rowid']  = $row->id;
+					
+					$this->savePrivacy($data, $userId, 2);
+				}
+			}
+		 }
+		
+		return;
+	}
+	
+	/**
+	 * Insert record in privacy table
+	 *
+	 * @param	array	$data submitted data
+	 * @param	int		$status status of consent : 0 = new, 1 = update, 2 = remove
+	 *
+	 * @return	bool
+	 */
+	protected function savePrivacy($data, $userId, $status)
+	{
+		$db 	   = JFactory::getDBO();
+		$params    = $this->getParams();
+		$formModel = $this->getModel();
+		
+		$now 	   = new JDate('now');
+		$listId	   = $data['listid'];
+		$formId	   = $data['formid'];
+		$rowId	   = $data['rowid'];
+		
+		$consentMessage = $params->get('consent_terms_text');
+		
+		// Optional record of the IP address
+		$ip = '';
+		if($params->get('consent_ip_record', '0') === '1')
+		{
+			$ip = $_SERVER['REMOTE_ADDR'];
+		   
+		}
+		
+		$query 	 = $db->getQuery( true );
+		$columns = array('id', 'date_time', 'list_id', 'form_id', 'row_id', 'user_id', 'consent_message', 'update_record','ip');
+		$values  = array('NULL',
+						 $db->quote($now->format('Y-m-d H:i:s')),
+						 $db->quote($listId),
+						 $db->quote($formId),
+						 $db->quote($rowId),
+						 $db->quote($userId),
+						 $db->quote($consentMessage),
+						 $db->quote($status),
+						 $db->quote($ip)
+						 );
+		$query->insert($db->quoteName('#__fabrik_privacy'))
+			  ->columns($db->quoteName($columns))
+			  ->values(implode(',', $values));
+		$db->setQuery($query);
+		$db->execute();
+		
+		return;
 	}
 }
