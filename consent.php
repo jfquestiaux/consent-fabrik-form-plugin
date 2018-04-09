@@ -141,14 +141,9 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		$contact   = array_key_exists('fabrik_contact_consent', $post);
 		$rowid	   = $post['rowid'];
 		
-		
 		if($params->get('consent_juser', '0') === '1')
 		{
-			$userIdField = $this->getFieldName('consent_field_userid');      echo '<pre>';
-				print_r( $userIdField );
-				echo '</pre>';
-				exit;
-			
+			$userIdField = $this->getFieldName('consent_field_userid');
 			$userId = $data[$userIdField];
 		}
 
