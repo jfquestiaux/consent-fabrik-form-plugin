@@ -29,3 +29,5 @@ With this plugin, you can comply with GDPR:
 * In your Fabrik form settings, add the plugin and configure it as appropriate
 
 You can see this plugin in action on [this page](https://www.betterweb.fr/contact) of our website.
+
+Need help to comply to GDPR, please contact us : [https://www.betterweb.fr/services/applications-pour-joomla](https://www.betterweb.fr/services/applications-pour-joomla).
