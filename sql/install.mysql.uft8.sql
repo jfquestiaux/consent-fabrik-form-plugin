@@ -7,6 +7,9 @@ CREATE TABLE IF NOT EXISTS `#__fabrik_privacy` (
 	`user_id` INT( 6 ) NOT NULL ,
 	`consent_message` TEXT NOT NULL,
 	`update_record` TINYINT( 1 ) NOT NULL ,
-	`ip` VARCHAR( 100 ) NOT NULL
+	`ip` VARCHAR( 100 ) NOT NULL,
+	`newsletter_engine` VARCHAR(50) NULL,
+	`sublist_id` INT(6) NOT NULL,
+	`subid` INT(6) NOT NULL
 );
  
