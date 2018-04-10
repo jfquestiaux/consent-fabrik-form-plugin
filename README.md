@@ -6,7 +6,7 @@ This plugin asks and records user's consent in order to be compliant with the GD
 
 You can use it for **contacts forms**, asking confirmation to the user filling the form that you are authorized to process his personal data according to your terms of services.
 This is done through an **unchecked checkbox**, preceded by a custom text asking for consent. This custom text can include a link to your terms of services or any URL.
-Once the file is submitted, the consent is recorded in a table in the Joomla! main database (#__fabrik_pricvacy). The record includes:
+Once the file is submitted, the consent is recorded in a table in the Joomla! main database (#__fabrik_privacy). The record includes:
 * the date of the submission
 * a reference to the Fabrik list ID, so you can pre-filter the records in case you have several tables recording personal datas you wish to track consent
 * a reference to the form ID
@@ -28,6 +28,6 @@ With this plugin, you can comply with GDPR:
 * Once installed, go to the plugin manager, filter out on fabrik form plugins and enable the plugin
 * In your Fabrik form settings, add the plugin and configure it as appropriate
 
-You can see this plugin in action on [this page](https://www.betterweb.fr/contact?utm_medium=referral&utm_source=github&utm_campaign=signature) of our website.
+You can see this plugin in action on [this page](https://www.betterweb.fr/contact) of our website.
 
-Need help to comply to GDPR, please contact us : [https://www.betterweb.fr/services/applications-pour-joomla](https://www.betterweb.fr/services/applications-pour-joomla?utm_medium=referral&utm_source=github&utm_campaign=signature).
+Need help to comply to GDPR, please contact us : [https://www.betterweb.fr/services/applications-pour-joomla](https://www.betterweb.fr/services/applications-pour-joomla).
