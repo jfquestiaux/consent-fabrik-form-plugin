@@ -30,6 +30,8 @@
 		<folder>language</folder>
 		<folder>layouts</folder>
 		<folder>sql</folder>
+		<filename>consent.js</filename>
+		<filename>consent-min.js</filename>
 		<filename>index.html</filename>
 	</files>
 
