@@ -38,6 +38,9 @@
 				onlytablefields="0"
 				repeat="true" />
 			
+			<field default="" description="PLG_FORM_CONSENT_EMAIL_SUBJECT_DESC" label="PLG_FORM_CONSENT_EMAIL_SUBJECT_LABEL" name="consent_email_subject" repeat="true" size="40" type="text" />
+			<field default="" description="PLG_FORM_CONSENT_MESSAGE_TEXT_DESC" label="PLG_FORM_CONSENT_MESSAGE_TEXT_LABEL" name="consent_message_body" repeat="true" type="textarea" cols="60" rows="2" />
+			
 		</fieldset>
 		
 		<fieldset name="plg-form-consent-layout" label="PLG_FORM_CONSENT_LAYOUT">

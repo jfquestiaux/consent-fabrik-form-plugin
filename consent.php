@@ -140,11 +140,12 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 		$post      = $filter->clean($_POST, 'array');
 		$contact   = array_key_exists('fabrik_contact_consent', $post);
 		$rowid	   = $post['rowid'];
+		$user 	   = JFactory::getUser();
 		
 		if($params->get('consent_juser', '0') === '1')
 		{
 			$userIdField = $this->getFieldName('consent_field_userid');
-			$userId = $data[$userIdField];
+			$userId 	 = $data[$userIdField];
 		}
 
 		// If consent is missing for contact, do nothing
@@ -166,6 +167,16 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 			else
 			{
 				$update = '1';
+				// If an admin updates the user's data, the user has to be informed via email
+				// No email is sent if the user updates his own data
+				
+				if($user->get('id') != $userId)
+				{ 
+					$userEmailField = $this->getFieldName('consent_field_email');
+					$userEmail		= $data[$userEmailField];
+					
+					$this->sendUpdateWarning($userEmail);
+				}
 			}
 		
 			$this->savePrivacy($data, $userId, $update);
@@ -222,7 +233,7 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 	 */
 	protected function savePrivacy($data, $userId, $status)
 	{
-		$db 	   = JFactory::getDBO();
+		$db 	   = FabrikWorker::getDbo();
 		$params    = $this->getParams();
 		$formModel = $this->getModel();
 		
@@ -258,6 +269,65 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 			  ->values(implode(',', $values));
 		$db->setQuery($query);
 		$db->execute();
+		
+		return;
+	}
+	
+	/**
+	 * Send an email to the user when an admin has updated his data
+	 *
+	 * @param	string	$email	user's email
+	 *
+	 * @return	bool
+	 */
+	protected function sendUpdateWarning($email)
+	{
+		$params = $this->getParams();
+		jimport('joomla.mail.helper');
+		$w = new FabrikWorker;
+		     
+		$cc  	   	   	 = null;
+		$bcc 	   	   	 = null;
+		$emailFrom 	   	 = $returnPath 	   = $this->config->get('mailfrom');
+		$emailFromName 	 = $returnPathName = $this->config->get('fromname', $emailFrom);
+		$subject 	   	 = $params->get('consent_email_subject');
+		$body   	 	 = $params->get('consent_message_body');
+		$htmlEmail		 = true;
+
+		if($body == '')
+		{
+			$this->app->enqueueMessage(JText::_('PLG_FORM_CONSENT_MESSAGE_TEXT_EMPTY'), 'warning');
+			return;
+		}
+		$thisAttachments = array();
+		$customHeaders   = array();
+		
+		if (FabrikWorker::isEmail($email))
+		{
+			$res = FabrikWorker::sendMail(
+					$emailFrom,
+					$emailFromName,
+					$email,
+					$subject,
+					$body,
+					$htmlEmail,
+					$cc,
+					$bcc,
+					$thisAttachments,
+					$returnPath,
+					$returnPathName,
+					$customHeaders
+				);
+			
+			if ($res !== true)
+			{
+				$this->app->enqueueMessage(JText::sprintf('PLG_FORM_CONSENT_DID_NOT_SEND_EMAIL', $email), 'warning');
+			}
+		}
+		else
+		{
+			$this->app->enqueueMessage(JText::sprintf('PLG_FORM_CONSENT_DID_NOT_SEND_EMAIL_INVALID_ADDRESS', $email), 'warning');
+		}
 		
 		return;
 	}
