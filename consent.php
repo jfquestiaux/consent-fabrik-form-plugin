@@ -178,9 +178,14 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 					$this->sendUpdateWarning($userEmail);
 				}
 			}
-		
-			$this->savePrivacy($data, $userId, $update);
 		}
+		else
+		{
+			$userId = 0;
+			$update = 0;
+		}
+		
+		$this->savePrivacy($data, $userId, $update);
 		
 		return;
 	}
