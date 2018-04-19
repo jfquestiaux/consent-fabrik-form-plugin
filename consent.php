@@ -48,20 +48,24 @@ class PlgFabrik_FormConsent extends PlgFabrik_Form
 
 			if (array_key_exists('consent_required', $errors))
 			{
-				$layoutData->errClass = '';
-				$layoutData->errText  = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
-			}
-			elseif(array_key_exists('consent_remove', $errors))
-			{
-				$layoutData->errClass = '';
-				$layoutData->errText  = FText::_('PLG_FORM_CONSENT_REMOVE_CONSENT');
+				$layoutData->consentErrClass = '';
 			}
 			else
 			{
-				$layoutData->errClass = 'fabrikHide';
+				$layoutData->consentErrClass = 'fabrikHide';
 			}
 
-			
+			if(array_key_exists('consent_remove', $errors))
+			{
+				$layoutData->removeErrClass = '';
+			}
+			else
+			{
+				$layoutData->removeErrClass = 'fabrikHide';
+			}
+
+			$layoutData->consentErrText  = FText::_('PLG_FORM_CONSENT_PLEASE_CONFIRM_CONSENT');
+			$layoutData->removeErrText  = FText::_('PLG_FORM_CONSENT_REMOVE_CONSENT');
 			$layoutData->useFieldset   = $params->get('consent_fieldset', '0') === '1';
 			$layoutData->fieldsetClass = $params->get('consent_fieldset_class', '');
 			$layoutData->legendClass   = $params->get('consent_legend_class', '');

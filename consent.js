@@ -22,9 +22,15 @@ define(['jquery', 'fab/fabrik'], function (jQuery, Fabrik) {
 			this.options = jQuery.extend(this.options, options);
 			this.form = Fabrik.getBlock('form_' + this.options.formid);
 
-			Fabrik.addEvent('fabrik.form.submit.failed', function (form, event, btn) {
+			Fabrik.addEvent('fabrik.form.submit.failed', function (form, json) {
 				if (form === this.form) {
-                    jQuery('.consentError').removeClass('fabrikHide');
+				    // show the appropriate message
+				    if (typeOf(json.errors.consent_required) !== 'null') {
+                        jQuery('.consentError.requireConsent').removeClass('fabrikHide');
+                    }
+                    else if (typeOf(json.errors.consent_required) !== 'null') {
+                        jQuery('.consentError.removeConsent').removeClass('fabrikHide');
+                    }
                     this.form.showMainError(this.form.options.error);
                 }
 			}.bind(this));
